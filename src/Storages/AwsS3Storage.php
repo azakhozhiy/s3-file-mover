@@ -1,11 +1,11 @@
 <?php
 
-namespace Azk\S3FileMover\Drivers;
+namespace Azk\S3FileMover\Storages;
 
 use Azk\S3FileMover\Components\Abstract\AbstractStorage;
 use Azk\S3FileMover\Components\Factories\StorageConfigItemFactory;
 
-class AwsS3StorageDriver extends AbstractStorage
+class AwsS3Storage extends AbstractStorage
 {
     public const CREDENTIALS_CONFIG_KEY = 'credentials';
 

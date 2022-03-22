@@ -1,10 +1,10 @@
 <?php
 
-namespace Azk\S3FileMover\Drivers;
+namespace Azk\S3FileMover\Storages;
 
 use Azk\S3FileMover\Components\Factories\StorageConfigItemFactory;
 
-class SelectelS3StorageDriver extends AwsS3StorageDriver
+class SelectelS3Storage extends AwsS3Storage
 {
     protected string $region = 'ru-1';
     protected string $endpoint = 'https://s3.storage.selcloud.ru';
@@ -14,7 +14,7 @@ class SelectelS3StorageDriver extends AwsS3StorageDriver
         return 'selectel-s3';
     }
 
-    public function initConfigItems(): AwsS3StorageDriver
+    public function initConfigItems(): AwsS3Storage
     {
         return parent::initConfigItems()
             ->addConfigItem(

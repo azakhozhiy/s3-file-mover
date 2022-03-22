@@ -2,18 +2,18 @@
 
 use Azk\S3FileMover\Components\StorageManager;
 use Azk\S3FileMover\Contracts\StorageInterface;
-use Azk\S3FileMover\Drivers\AwsS3StorageDriver;
-use Azk\S3FileMover\Drivers\DigitalOceanS3StorageDriver;
-use Azk\S3FileMover\Drivers\SelectelS3StorageDriver;
+use Azk\S3FileMover\Storages\AwsS3Storage;
+use Azk\S3FileMover\Storages\DigitalOceanS3Storage;
+use Azk\S3FileMover\Storages\SelectelS3Storage;
 
 require_once __DIR__.'/vendor/autoload.php';
 
 $app = new Symfony\Component\Console\Application('S3 File Mover', '1.0.0');
 
 $storages = [
-    SelectelS3StorageDriver::class,
-    DigitalOceanS3StorageDriver::class,
-    AwsS3StorageDriver::class
+    SelectelS3Storage::class,
+    DigitalOceanS3Storage::class,
+    AwsS3Storage::class
 ];
 
 $storageManager = (new StorageManager());

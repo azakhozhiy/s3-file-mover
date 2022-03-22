@@ -1,8 +1,8 @@
 <?php
 
-namespace Azk\S3FileMover\Drivers;
+namespace Azk\S3FileMover\Storages;
 
-class DigitalOceanS3StorageDriver extends AwsS3StorageDriver
+class DigitalOceanS3Storage extends AwsS3Storage
 {
     protected string $endpoint = 'https://ams3.digitaloceanspaces.com';
     protected string $region = 'us-east-1';
