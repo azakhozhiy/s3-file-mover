@@ -4,7 +4,7 @@ namespace Azk\S3FileMover\Drivers;
 
 use Azk\S3FileMover\Components\Factories\StorageConfigItemFactory;
 
-class SelectelAwsS3StorageDriver extends AwsS3StorageDriver
+class SelectelS3StorageDriver extends AwsS3StorageDriver
 {
     protected string $region = 'ru-1';
     protected string $endpoint = 'https://s3.storage.selcloud.ru';
