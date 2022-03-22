@@ -1,0 +1,24 @@
+{
+  "name": "azakhozhiy/s3-files-mover",
+  "description": "Console application for moving files from one S3 to other S3.",
+  "type": "librery",
+  "autoload": {
+    "psr-4": {
+      "Azk\\S3FilesMover\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Aleksandr Zakhozhiy",
+      "email": "azk@avzare.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "aws/aws-sdk-php": "^3.215",
+    "symfony/console": "^6.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  }
+}
