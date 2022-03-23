@@ -16,6 +16,12 @@ composer install
 
 # Usage
 
+## Supported storages
+
+- Selectel S3
+- Digital Ocean S3
+- AWS S3
+
 ```
 php app.php --from-storage-driver={storage-name} --to-storage-driver={storage-name}
 ```
