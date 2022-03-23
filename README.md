@@ -1,5 +1,8 @@
 # S3 File Mover
 
+# Requirements
+
+- php80
 
 # Installation
 ```
