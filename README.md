@@ -1,5 +1,7 @@
 # S3 File Mover
 
+Console application for moving files from one S3 to another S3.
+
 ## Requirements
 
 - php80
