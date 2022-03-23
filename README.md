@@ -1,10 +1,10 @@
 # S3 File Mover
 
-# Requirements
+## Requirements
 
 - php80
 
-# Installation
+## Installation
 ```
 git clone git@github.com:azakhozhy/s3-file-mover.git
 cd ./s3-file-mover
@@ -14,15 +14,15 @@ cd ./s3-file-mover
 composer install
 ```
 
-# Usage
+## Usage
 
-## Predefined S3 storages
+### Predefined S3 storages
 
 - Selectel S3 (selectel-s3)
 - Digital Ocean S3 (do-s3)
 - AWS S3 (aws-s3)
 
-## Launch
+### Launch
 ```
 php app.php --from-storage-driver={storage-name} --to-storage-driver={storage-name}
 ```
