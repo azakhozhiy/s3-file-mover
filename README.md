@@ -16,7 +16,7 @@ composer install
 
 # Usage
 
-## Supported S3 storages
+## Predefined S3 storages
 
 - Selectel S3 (selectel-s3)
 - Digital Ocean S3 (do-s3)
