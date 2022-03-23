@@ -7,6 +7,7 @@
 # Installation
 ```
 git clone git@github.com:azakhozhy/s3-file-mover.git
+cd ./s3-file-mover
 ```
 
 ```
