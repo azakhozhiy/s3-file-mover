@@ -15,7 +15,7 @@ class S3ClientFactory
     {
         $options = self::fillOptions($storageDriver->getConfigItems());
 
-        return new S3Client($options);
+        return new S3Client(array_merge($options, ['http' => ['decode_content' => false]]));
     }
 
     private static function fillOptions(array $configItems): array
