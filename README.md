@@ -1,5 +1,7 @@
 # S3 File Mover
 
+[![Docker](https://github.com/azakhozhy/s3-file-mover/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/azakhozhy/s3-file-mover/actions/workflows/docker-publish.yml)
+
 Console application for moving files from one S3 to another S3.
 
 ## Requirements
