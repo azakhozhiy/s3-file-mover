@@ -1,7 +1,7 @@
 {
   "name": "azakhozhiy/s3-files-mover",
   "description": "Console application for moving files from one S3 to other S3.",
-  "type": "librery",
+  "type": "library",
   "autoload": {
     "psr-4": {
       "Azk\\S3FilesMover\\": "src/"

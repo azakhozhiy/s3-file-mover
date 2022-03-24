@@ -9,23 +9,32 @@ use Azk\S3FileMover\Exceptions\UnknownStorageException;
 class StorageManager implements StorageManagerInterface
 {
     /** @var StorageInterface[]|callable[] */
-    protected array $drivers = [];
+    protected array $items = [];
 
     public function register(string $driverName, callable|StorageInterface $driver): self
     {
-        $this->drivers[$driverName] = $driver;
+        $this->items[$driverName] = $driver;
 
         return $this;
     }
 
     public function driver(string $driverName): StorageInterface
     {
-        if (!isset($this->drivers[$driverName])) {
+        if (!isset($this->items[$driverName])) {
             throw new UnknownStorageException();
         }
 
-        $driver = $this->drivers[$driverName];
+        $driver = $this->items[$driverName];
+        $driver = is_callable($driver) ? $driver() : $this->items[$driverName];
+        $this->items[$driverName] = $driver;
 
-        return is_callable($driver) ? $driver() : $this->drivers[$driverName];
+        return $driver;
+    }
+
+    public function getAll(): array
+    {
+        return array_map(static function (StorageInterface|callable $s) {
+            return is_callable($s) ? $s() : $s;
+        }, $this->items);
     }
 }
