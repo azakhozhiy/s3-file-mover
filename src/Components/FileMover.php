@@ -36,9 +36,6 @@ class FileMover
             'Bucket' => $this->fromBucket
         ]);
 
-        $errors = [];
-        $success = [];
-
         // Move files from one s3 to another s3
         foreach ($filesFrom as $fileObject) {
             try {
@@ -52,10 +49,7 @@ class FileMover
             }
         }
 
-        return [
-            'success' => $success,
-            'errors' => $errors
-        ];
+        return [];
     }
 
     private function moveOne(mixed $fileObject): Result
