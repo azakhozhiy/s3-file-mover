@@ -26,5 +26,11 @@ composer install
 
 ### Launch
 ```
-php app.php --from-storage-driver={storage-name} --to-storage-driver={storage-name}
+php app.php move
+```
+
+or 
+
+```
+php app.php move --from-storage=do-s3 --to-storage=selectel-s3
 ```
