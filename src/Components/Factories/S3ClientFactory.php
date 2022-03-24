@@ -1,6 +1,8 @@
 <?php
 
-namespace Azk\S3FileMover\Components;
+declare(strict_types=1);
+
+namespace Azk\S3FileMover\Components\Factories;
 
 use Aws\S3\S3Client;
 use Aws\S3\S3ClientInterface;

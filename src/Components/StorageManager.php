@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Azk\S3FileMover\Components;
 
 use Azk\S3FileMover\Contracts\StorageInterface;
@@ -9,32 +11,34 @@ use Azk\S3FileMover\Exceptions\UnknownStorageException;
 class StorageManager implements StorageManagerInterface
 {
     /** @var StorageInterface[]|callable[] */
-    protected array $items = [];
+    protected array $drivers = [];
 
     public function register(string $driverName, callable|StorageInterface $driver): self
     {
-        $this->items[$driverName] = $driver;
+        $this->drivers[$driverName] = $driver;
 
         return $this;
     }
 
     public function driver(string $driverName): StorageInterface
     {
-        if (!isset($this->items[$driverName])) {
+        if (!isset($this->drivers[$driverName])) {
             throw new UnknownStorageException();
         }
 
-        $driver = $this->items[$driverName];
-        $driver = is_callable($driver) ? $driver() : $this->items[$driverName];
-        $this->items[$driverName] = $driver;
+        $driver = $this->drivers[$driverName];
+        $driver = is_callable($driver) ? $driver() : $this->drivers[$driverName];
+        $this->drivers[$driverName] = $driver;
 
         return $driver;
     }
 
     public function getAll(): array
     {
-        return array_map(static function (StorageInterface|callable $s) {
-            return is_callable($s) ? $s() : $s;
-        }, $this->items);
+        $data = array_map(static fn (StorageInterface|callable $s) => is_callable($s) ? $s() : $s, $this->drivers);
+
+        sort($data);
+
+        return $data;
     }
 }

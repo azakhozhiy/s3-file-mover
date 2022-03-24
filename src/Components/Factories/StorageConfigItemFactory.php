@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Azk\S3FileMover\Components\Factories;
 
 use Azk\S3FileMover\Components\Entities\StorageConfigItem;

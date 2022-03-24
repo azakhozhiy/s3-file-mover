@@ -4,7 +4,7 @@
   "type": "library",
   "autoload": {
     "psr-4": {
-      "Azk\\S3FilesMover\\": "src/"
+      "Azk\\S3FileMover\\": "src/"
     }
   },
   "authors": [
@@ -15,10 +15,18 @@
   ],
   "minimum-stability": "stable",
   "require": {
+    "php": "^8.0",
     "aws/aws-sdk-php": "^3.215",
     "symfony/console": "^6.0"
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.4",
+    "phpunit/phpunit": "^9.5",
     "roave/security-advisories": "dev-latest"
+  },
+  "scripts": {
+    "csf": [
+      "./vendor/bin/php-cs-fixer fix src --using-cache=no --allow-risky=yes"
+    ]
   }
 }

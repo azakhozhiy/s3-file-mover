@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Azk\S3FileMover\Storages;
 
 class DigitalOceanS3Storage extends AwsS3Storage

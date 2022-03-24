@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Azk\S3FileMover\Console\Commands;
 
 use Aws\S3\S3ClientInterface;
-use Azk\S3FileMover\Components\S3ClientFactory;
+use Azk\S3FileMover\Components\Factories\S3ClientFactory;
+use Azk\S3FileMover\Components\FileMover;
 use Azk\S3FileMover\Components\StorageManager;
 use Azk\S3FileMover\Console\Helpers\FileMoverQuestionHelper;
 use Azk\S3FileMover\Console\Helpers\MessageHelper;
 use Azk\S3FileMover\Console\Services\StorageConfigFiller;
 use Azk\S3FileMover\Contracts\StorageInterface;
-use Azk\S3FileMover\Services\S3FileMover;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 class FileMoverCommand extends Command
 {
@@ -49,30 +52,34 @@ class FileMoverCommand extends Command
         $this->questionHelper = new FileMoverQuestionHelper($input, $output, $this->getHelper('question'));
 
         $fromStorage = $this->initStorage($input->getOption('from-storage'));
-        $toStorage = $this->initStorage($input->getOption('to-storage'));
+        $toStorage = $this->initStorage($input->getOption('to-storage'), false);
 
         $storageConfigFiller = new StorageConfigFiller($this->questionHelper);
 
+        $output->writeln("Fill config for {$fromStorage::getName()}.");
         $fromStorageDriver = $storageConfigFiller->fill($fromStorage);
+
+        $output->writeln("Fill config for {$toStorage::getName()}.");
         $toStorageDriver = $storageConfigFiller->fill($toStorage);
 
         // Create s3 client instances
         $fromS3Client = S3ClientFactory::createByStorage($fromStorageDriver);
         $toS3Client = S3ClientFactory::createByStorage($toStorageDriver);
 
-        $bucketPrepared = static fn(S3ClientInterface $s3) => array_map(
-            static fn(array $bucket) => $bucket['Name'], $s3->listBuckets()
+        $storageBuckets = static fn (S3ClientInterface $s3) => array_map(
+            static fn (array $bucket) => $bucket['Name'],
+            $s3->listBuckets()['Buckets']
         );
 
-        $fromBucket = $this->questionHelper->choiceBucket($bucketPrepared($fromS3Client));
-        $toBucket = $this->questionHelper->choiceBucket($bucketPrepared($toS3Client));
+        $fromBucket = $this->questionHelper->choiceBucket($storageBuckets($fromS3Client));
+        $toBucket = $this->questionHelper->choiceBucket($storageBuckets($toS3Client), false);
 
-        $s3FileMover = new S3FileMover($fromS3Client, $fromBucket, $toS3Client, $toBucket);
+        $s3FileMover = new FileMover($fromS3Client, $fromBucket, $toS3Client, $toBucket);
 
         $s3FileMover->moveAll(
-            null,
-            null,
-            fn(array $file) => $output->writeln(
+            fn (array $fileObject, Throwable $e) => $output->writeln($e->getMessage()),
+            fn (array $file) => $output->writeln("Start move file {$file['Key']}. \n"),
+            fn (array $file) => $output->writeln(
                 MessageHelper::fileSuccessfullyMoved($file['Key'], $toStorage::getName(), $toBucket)
             )
         );
@@ -80,12 +87,12 @@ class FileMoverCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function initStorage(?string $name): StorageInterface
+    private function initStorage(?string $name, bool $isFrom = true): StorageInterface
     {
-        $storages = array_map(static fn(StorageInterface $s) => $s::getName(), $this->storageManager->getAll());
+        $storages = array_map(static fn (StorageInterface $s) => $s::getName(), $this->storageManager->getAll());
 
         if (!$name) {
-            $name = $this->questionHelper->storageQuestion($storages);
+            $name = $this->questionHelper->storageQuestion($storages, $isFrom);
         }
 
         return $this->storageManager->driver($name);

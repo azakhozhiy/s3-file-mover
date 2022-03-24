@@ -1,12 +1,14 @@
 <?php
 
-namespace Azk\S3FileMover\Services;
+declare(strict_types=1);
+
+namespace Azk\S3FileMover\Components;
 
 use Aws\Result;
 use Aws\S3\S3ClientInterface;
 use Throwable;
 
-class S3FileMover
+class FileMover
 {
     private S3ClientInterface $fromS3Client;
     private S3ClientInterface $toS3Client;
@@ -51,7 +53,9 @@ class S3FileMover
                     'line' => $e->getLine()
                 ];
 
-                $errorHandler($e);
+                if ($errorHandler) {
+                    $errorHandler($fileObject, $e);
+                }
             }
         }
 

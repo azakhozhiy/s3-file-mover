@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Azk\S3FileMover\Contracts;
 
 interface StorageManagerInterface

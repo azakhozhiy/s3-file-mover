@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Azk\S3FileMover\Console\Helpers;
 
 class FileMoverQuestionHelper extends QuestionHelper
@@ -9,8 +11,6 @@ class FileMoverQuestionHelper extends QuestionHelper
         $question = $isFrom
             ? "Please select from which bucket to transfer the files"
             : "Please choose in which bucket to upload the files";
-
-        $buckets = array_map(static fn(array $bucket) => $bucket['Name'], $buckets);
 
         return $this->choiceQuestion($question, $buckets, 'Bucket %s is invalid.');
     }

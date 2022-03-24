@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Azk\S3FileMover\Console\Helpers;
 
 use Closure;
@@ -18,7 +20,7 @@ class QuestionHelper
         OutputInterface $output,
         SymphonyQuestionHelper $helper
     ) {
-        $this->askClosure = static fn(Question $q) => $helper->ask($input, $output, $q);
+        $this->askClosure = static fn (Question $q) => $helper->ask($input, $output, $q);
     }
 
     public function stringQuestion(string $question): mixed
