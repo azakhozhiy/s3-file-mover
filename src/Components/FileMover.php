@@ -43,16 +43,9 @@ class FileMover
         foreach ($filesFrom as $fileObject) {
             try {
                 $beforeMoveOne($fileObject);
-                $success[] = $this->moveOne($fileObject);
+                $this->moveOne($fileObject);
                 $afterMoveOne($fileObject);
             } catch (Throwable $e) {
-                $errors[] = [
-                    'fileObject' => $fileObject,
-                    'message' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine()
-                ];
-
                 if ($errorHandler) {
                     $errorHandler($fileObject, $e);
                 }
