@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Azk\S3FileMover\Components;
 
-use Aws\Result;
 use Aws\S3\S3ClientInterface;
 use Throwable;
 
@@ -30,7 +29,7 @@ class FileMover
     public function moveAll(
         ?callable $errorHandler = null,
         ?callable $beforeMoveOne = null,
-        ?callable $afterMoveOne = null
+        ?callable $successMoveOne = null
     ): array {
         $filesFrom = $this->fromS3Client->getIterator('ListObjects', [
             'Bucket' => $this->fromBucket
@@ -40,8 +39,7 @@ class FileMover
         foreach ($filesFrom as $fileObject) {
             try {
                 $beforeMoveOne($fileObject);
-                $this->moveOne($fileObject);
-                $afterMoveOne($fileObject);
+                $this->moveOne($fileObject, $successMoveOne);
             } catch (Throwable $e) {
                 if ($errorHandler) {
                     $errorHandler($fileObject, $e);
@@ -52,19 +50,45 @@ class FileMover
         return [];
     }
 
-    private function moveOne(mixed $fileObject): Result
+    private function moveOne(mixed $fileObject, ?callable $successMove = null): void
     {
         $filePath = $fileObject['Key'];
 
-        $bodyFile = $this->fromS3Client->getObject([
+        $file = $this->fromS3Client->getObject([
             'Bucket' => $this->fromBucket,
             'Key' => $filePath,
-        ])['Body'];
+        ]);
 
-        return $this->toS3Client->putObject([
+        $contentTypeOnToServer = null;
+        $bodyOnToServer = null;
+
+        $contentType = $file['ContentType'];
+        $bodyFile = $file['Body'];
+
+        if ($this->toS3Client->doesObjectExist($this->toBucket, $filePath)) {
+            $fileOnToServer = $this->toS3Client->getObject([
+                'Bucket' => $this->toBucket,
+                'Key' => $filePath
+            ]);
+
+            $contentTypeOnToServer = $fileOnToServer['ContentType'];
+            $bodyOnToServer = $fileOnToServer['Body'];
+        }
+
+        $contentTypeIsEquals = $contentTypeOnToServer === $contentType;
+        $bodyIsEquals = $bodyOnToServer === $bodyFile;
+
+        if ($contentTypeIsEquals && $bodyIsEquals) {
+            return;
+        }
+
+        $this->toS3Client->putObject([
             'Bucket' => $this->toBucket,
             'Key' => $filePath,
             'Body' => $bodyFile,
+            'ContentType' => $contentType,
         ]);
+
+        $successMove($fileObject);
     }
 }
