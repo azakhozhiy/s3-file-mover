@@ -56,14 +56,14 @@ class FileMoverCommand extends Command
 
         $storageConfigFiller = new StorageConfigFiller($this->questionHelper);
 
-        $output->writeln("Fill config for {$fromStorage::getName()}.");
+        $output->writeln("Fill (FROM) config for {$fromStorage::getName()}.");
         $fromStorageDriver = $storageConfigFiller->fill($fromStorage);
-
-        $output->writeln("Fill config for {$toStorage::getName()}.");
-        $toStorageDriver = $storageConfigFiller->fill($toStorage);
-
-        // Create s3 client instances
+        // Create FROM s3 client instance
         $fromS3Client = S3ClientFactory::createByStorage($fromStorageDriver);
+
+        $output->writeln("Fill (TO) config for  {$toStorage::getName()}.");
+        $toStorageDriver = $storageConfigFiller->fill($toStorage);
+        // Create TO s3 client instance
         $toS3Client = S3ClientFactory::createByStorage($toStorageDriver);
 
         $storageBuckets = static fn (S3ClientInterface $s3) => array_map(
@@ -95,6 +95,6 @@ class FileMoverCommand extends Command
             $name = $this->questionHelper->storageQuestion($storages, $isFrom);
         }
 
-        return $this->storageManager->driver($name);
+        return clone $this->storageManager->driver($name);
     }
 }

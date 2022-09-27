@@ -33,6 +33,8 @@ class S3ClientFactory
             }
         }
 
+        var_dump($options);
+
         return $options;
     }
 }
