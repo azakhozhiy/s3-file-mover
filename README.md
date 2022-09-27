@@ -36,3 +36,5 @@ or
 ```
 php app.php move --from-storage=do-s3 --to-storage=selectel-s3
 ```
+
+### Docker
